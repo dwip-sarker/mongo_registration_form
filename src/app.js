@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
     res.render('index');
 });
+
 app.post('/', async (req, res) => {
     const { password } = req.body;
     const { confirmpassword } = req.body;
@@ -43,6 +44,25 @@ app.post('/', async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+    }
+});
+
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+app.post('/login', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const { password } = req.body;
+        const findUser = await Register.findOne({ userEmail: email });
+        if (findUser.password == password) {
+            res.status(201).render('index');
+        } else {
+            res.send('your password is wrong');
+        }
+    } catch (error) {
+        res.status(400).send('error happened');
     }
 });
 
